@@ -31,21 +31,18 @@
 
 
 
-var restify = require('express');
-var server = restify();
+var restify = require('restify');
+var server = restify.createServer();
 
 
-server.listen(process.env.port || 3978, function () {
-    console.log('%s listening to %s'); 
+server.listen(3978, function () {
+    console.log('%s listening to %s', server.name, server.url); 
 });
-
-
 
 
 // Setup Restify Server 
 
 server.get('/', function (req, res) { 
-
     res.send('Restify Playground running');
 }); 
 

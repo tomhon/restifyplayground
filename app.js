@@ -1,49 +1,60 @@
-// var restify = require('restify');
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-// // function respond(req, res, next) {
-// //   res.send('hello ' + req.params.name);
-// //   next();
-// // };
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
-// // function respondbye(req, res, next) {
-// //   res.send('goodbye ' + req.params.name);
-// //   next();
-// // };
+var app = express();
 
-// var server = restify.createServer();
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
-// server.get('/', function (req, res) { 
-//    res.send('Restify Playground');
-// }); 
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// // server.get('/hello/:name', respond);
-// // server.get('/goodbye/:name', respondbye);
-// // server.head('/hello/:name', respond);
-// // server.pre(restify.pre.userAgentConnection());
+app.use('/', routes);
+app.use('/users', users);
 
-// server.listen(8080, function() {
-//   console.log('%s listening at %s');
-// });
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
+// error handlers
 
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
 
-//*************************************************** */
-
-
-
-var restify = require('restify');
-var server = restify.createServer();
-
-
-server.listen(3978, function () {
-    console.log('%s listening to %s', server.name, server.url); 
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
 
 
-// Setup Restify Server 
-
-server.get('/', function (req, res) { 
-    res.send('Restify Playground running');
-}); 
-
-
+module.exports = app;

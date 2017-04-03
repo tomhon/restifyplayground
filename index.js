@@ -31,8 +31,8 @@
 
 
 
-var restify = require('restify');
-var server = restify.createServer();
+var restify = require('express');
+var server = restify();
 
 
 server.listen(process.env.port || 3978, function () {
